@@ -1,0 +1,38 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: darkslategray;
+    text-align: center;
+}
+
+.text-window {
+    width: 750px;
+    height: 150px;
+    margin: 15px auto 15px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.keyboard-container {
+    width: 750px;
+    margin: 0 auto;
+    padding: 5px;
+    background: rgb(218, 205, 205);
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.description {
+    font-size: 20px;
+    color: darkslategray;
+    margin: 10px auto;
+    text-align: center;
+}
