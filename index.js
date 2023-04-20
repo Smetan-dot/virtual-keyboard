@@ -27,7 +27,7 @@ init();
 
 const keyboardContainer = document.querySelector(".keyboard-container");
 const keyboardKeys = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
-                      "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "'\'", "Del", 
+                      "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", "Del", 
                       "CapsLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter", 
                       "Lshift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "▲", "Rshift", 
                       "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
@@ -48,3 +48,45 @@ function createKeys() {
 }
 
 createKeys();
+
+const keys = document.querySelectorAll(".key");
+
+function clickOnKey(){
+    document.body.addEventListener("keydown", function(event) {
+        for(let i = 0; i < keys.length; i++) {
+            if(keys[i].innerHTML === event.key) keys[i].classList.add("press");
+            if(keys[i].innerHTML === "Lshift" && event.code === "ShiftLeft" || 
+               keys[i].innerHTML === "Rshift" && event.code === "ShiftRight" || 
+               keys[i].innerHTML === "Lalt" && event.code === "AltLeft" || 
+               keys[i].innerHTML === "Ralt" && event.code === "AltRight" || 
+               keys[i].innerHTML === "Lctrl" && event.code === "ControlLeft" || 
+               keys[i].innerHTML === "Rctrl" && event.code === "ControlRight" || 
+               keys[i].innerHTML === "Del" && event.code === "Delete" || 
+               keys[i].innerHTML === "Win" && event.code === "MetaLeft" || 
+               keys[i].innerHTML === "▲" && event.code === "ArrowUp" || 
+               keys[i].innerHTML === "◄" && event.code === "ArrowLeft" || 
+               keys[i].innerHTML === "▼" && event.code === "ArrowDown" || 
+               keys[i].innerHTML === "►" && event.code === "ArrowRight") keys[i].classList.add("press");
+        }
+    })
+
+    document.body.addEventListener("keyup", function(event) {
+        for(let j = 0; j < keys.length; j++) {
+            if(keys[j].innerHTML === event.key) keys[j].classList.remove("press");
+            if(keys[j].innerHTML === "Lshift" && event.code === "ShiftLeft" || 
+               keys[j].innerHTML === "Rshift" && event.code === "ShiftRight" || 
+               keys[j].innerHTML === "Lalt" && event.code === "AltLeft" || 
+               keys[j].innerHTML === "Ralt" && event.code === "AltRight" || 
+               keys[j].innerHTML === "Lctrl" && event.code === "ControlLeft" || 
+               keys[j].innerHTML === "Rctrl" && event.code === "ControlRight" || 
+               keys[j].innerHTML === "Del" && event.code === "Delete" || 
+               keys[j].innerHTML === "Win" && event.code === "MetaLeft" || 
+               keys[j].innerHTML === "▲" && event.code === "ArrowUp" || 
+               keys[j].innerHTML === "◄" && event.code === "ArrowLeft" || 
+               keys[j].innerHTML === "▼" && event.code === "ArrowDown" || 
+               keys[j].innerHTML === "►" && event.code === "ArrowRight") keys[j].classList.remove("press");
+        }
+    })
+}
+
+clickOnKey();

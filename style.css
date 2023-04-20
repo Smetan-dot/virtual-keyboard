@@ -62,3 +62,7 @@ body {
 .super-wide {
     width: 329px;
 }
+
+.press {
+    background: cadetblue;
+}
