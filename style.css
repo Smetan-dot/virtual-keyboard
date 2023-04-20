@@ -12,7 +12,7 @@ body {
 }
 
 .text-window {
-    width: 750px;
+    width: 721px;
     height: 150px;
     margin: 15px auto 15px;
     padding: 5px;
@@ -22,7 +22,7 @@ body {
 }
 
 .keyboard-container {
-    width: 750px;
+    width: 721px;
     margin: 0 auto;
     padding: 5px;
     background: rgb(218, 205, 205);
@@ -35,4 +35,30 @@ body {
     color: darkslategray;
     margin: 10px auto;
     text-align: center;
+}
+
+.key {
+    width: 40px;
+    height: 40px;
+    float: left;
+    margin: 4px;
+    line-height: 40px;
+    text-align: center;
+    color: white;
+    background: rgb(116, 102, 102);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.wide {
+    width: 88px;
+    background: darkslategray;
+}
+
+.dark {
+    background: darkslategray;
+}
+
+.super-wide {
+    width: 329px;
 }
