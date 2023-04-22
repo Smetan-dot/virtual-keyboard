@@ -21,7 +21,7 @@ function init() {
     languageDescription.textContent = "Для переключения языка комбинация: левыe shift + alt";
     languageDescription.className = "description";
     document.body.appendChild(languageDescription);
-}
+}  // creating form for virtual keyboard
 
 init();
 
@@ -37,20 +37,21 @@ const keyboardKeysRu = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "
                         "Lshift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "▲", "Rshift", 
                         "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
 
-let language = "en";
+let language;
 function setLocalStorage() {
     localStorage.setItem("language", language);
 }
-window.addEventListener('beforeunload', setLocalStorage);
+window.addEventListener('beforeunload', setLocalStorage);  // set language
 
 function getLocalStorage() {
     if(localStorage.getItem("language")) {
       language = localStorage.getItem("language");
     }
   }
-  window.addEventListener('load', getLocalStorage);
+window.addEventListener('load', getLocalStorage()); // get language 
 
 function createKeys() {
+    if(language === undefined) language = "en";
     keyboardKeysEn.forEach((element) => {
         const keyElement = document.createElement("div");
         keyElement.textContent = element;
@@ -85,7 +86,7 @@ function createKeys() {
     if(language === "ru") document.querySelectorAll(".en").forEach((el) => {
         el.classList.add("hidden");
     })
-}
+}  // creating buttons in keyboard-container (2 languages)
 
 createKeys();
 
@@ -93,7 +94,9 @@ let textWindow = document.querySelector(".text-window");
 const keys = document.querySelectorAll(".key");
 
 function pressKey() {
+    checkPressedKeys(changeLanguage, "AltLeft", "ShiftLeft");
     document.body.addEventListener("keydown", function(event) {
+        event.preventDefault(); //write functionality for special keys
         for(let i = 0; i < keys.length; i++) {
             if(keys[i].textContent === event.key) {
                 keys[i].classList.add("press");
@@ -136,7 +139,7 @@ function pressKey() {
                keys[j].textContent === "►" && event.code === "ArrowRight") keys[j].classList.remove("press");
         }
     })
-}
+}    // physical press keys on keyboard
 
 pressKey();
 
@@ -162,6 +165,46 @@ function clickOnKey() {
             if(keys[j].textContent !== "CapsLock") keys[j].classList.remove("press");
         })
     }
-}    
+}    // mouse-click at virtual keyboard
 
 clickOnKey();
+
+function changeLanguage() {
+    if(language === "en") {
+        language = "ru";
+        document.querySelectorAll(".en").forEach((el) => {
+            el.classList.add("hidden");
+        })
+        document.querySelectorAll(".ru").forEach((el) => {
+            el.classList.remove("hidden");
+        })
+    }
+    else {
+        language = "en";
+        document.querySelectorAll(".ru").forEach((el) => {
+            el.classList.add("hidden");
+        })
+        document.querySelectorAll(".en").forEach((el) => {
+            el.classList.remove("hidden");
+        })
+    }
+}
+
+function checkPressedKeys(func, ...codes) {
+    let pressed = new Set();
+
+    document.addEventListener("keydown", function(event) {
+        pressed.add(event.code);
+
+        for(let code of codes) {
+            if(!pressed.has(code)) return;
+        }
+
+        pressed.clear();
+        func();
+    })
+
+    document.addEventListener('keyup', function(event) {
+        pressed.delete(event.code);
+      });
+} // change language 
