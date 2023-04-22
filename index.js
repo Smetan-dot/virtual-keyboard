@@ -6,7 +6,6 @@ function init() {
 
     const textArea = document.createElement("textarea");
     textArea.className = "text-window";
-    //attr disabled true
     document.body.appendChild(textArea);
 
     const keyboard = document.createElement("div");
@@ -19,7 +18,7 @@ function init() {
     document.body.appendChild(systemDescription);
 
     const languageDescription = document.createElement("p");
-    languageDescription.textContent = "Для переключения языка комбинация: левыe ctrl + alt";
+    languageDescription.textContent = "Для переключения языка комбинация: левыe shift + alt";
     languageDescription.className = "description";
     document.body.appendChild(languageDescription);
 }
@@ -27,17 +26,36 @@ function init() {
 init();
 
 const keyboardContainer = document.querySelector(".keyboard-container");
-const keyboardKeys = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
-                      "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", "Del", 
-                      "CapsLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter", 
-                      "Lshift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "▲", "Rshift", 
-                      "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
+const keyboardKeysEn = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
+                        "Tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", "Del", 
+                        "CapsLock", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "Enter", 
+                        "Lshift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "▲", "Rshift", 
+                        "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
+const keyboardKeysRu = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
+                        "Tab", "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\", "Del", 
+                        "CapsLock", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "Enter", 
+                        "Lshift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "▲", "Rshift", 
+                        "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
+
+let language = "en";
+function setLocalStorage() {
+    localStorage.setItem("language", language);
+}
+window.addEventListener('beforeunload', setLocalStorage);
+
+function getLocalStorage() {
+    if(localStorage.getItem("language")) {
+      language = localStorage.getItem("language");
+    }
+  }
+  window.addEventListener('load', getLocalStorage);
 
 function createKeys() {
-    keyboardKeys.forEach((element) => {
+    keyboardKeysEn.forEach((element) => {
         const keyElement = document.createElement("div");
         keyElement.textContent = element;
         keyElement.className = "key";
+        keyElement.classList.add("en");
         if(element === "Backspace" || element === "CapsLock" || element === "Enter" ||
            element === "Lshift" || element === "Rshift") keyElement.classList.add("wide");
         if(element === "Tab" || element === "Del" || element === "Lctrl" || element === "Rctrl" || 
@@ -45,6 +63,27 @@ function createKeys() {
            element === "◄" || element === "▼" || element === "►") keyElement.classList.add("dark");
         if(element === " ") keyElement.classList.add("super-wide");
         keyboardContainer.appendChild(keyElement);
+    })
+
+    keyboardKeysRu.forEach((element) => {
+        const keyElement = document.createElement("div");
+        keyElement.textContent = element;
+        keyElement.className = "key";
+        keyElement.classList.add("ru");
+        if(element === "Backspace" || element === "CapsLock" || element === "Enter" ||
+           element === "Lshift" || element === "Rshift") keyElement.classList.add("wide");
+        if(element === "Tab" || element === "Del" || element === "Lctrl" || element === "Rctrl" || 
+           element === "Lalt" || element === "Ralt" || element === "Win" || element === "▲" || 
+           element === "◄" || element === "▼" || element === "►") keyElement.classList.add("dark");
+        if(element === " ") keyElement.classList.add("super-wide");
+        keyboardContainer.appendChild(keyElement);
+    })
+
+    if(language === "en") document.querySelectorAll(".ru").forEach((el) => {
+        el.classList.add("hidden");
+    })
+    if(language === "ru") document.querySelectorAll(".en").forEach((el) => {
+        el.classList.add("hidden");
     })
 }
 
@@ -59,7 +98,7 @@ function pressKey() {
             if(keys[i].textContent === event.key) {
                 keys[i].classList.add("press");
                 if(keys[i].textContent === "Enter" || keys[i].textContent === "CapsLock" || 
-                   keys[i].textContent === "Backspace" || keys[i].textContent === "Tab") textWindow = textWin;
+                   keys[i].textContent === "Backspace" || keys[i].textContent === "Tab") textWindow += "";
                 else textWindow.textContent += event.key;
             }
             if(keys[i].textContent === "Lshift" && event.code === "ShiftLeft" || 
@@ -113,7 +152,7 @@ function clickOnKey() {
                     keys[i].textContent === "Lshift" || keys[i].textContent === "Rshift" || 
                     keys[i].textContent === "Lalt" || keys[i].textContent === "Ralt" || 
                     keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl" ||
-                    keys[i].textContent === "Del") textWindow = textWindow;
+                    keys[i].textContent === "Del") textWindow += "";
             else textWindow.textContent += keys[i].textContent;
         })
     }
