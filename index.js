@@ -91,40 +91,25 @@ function createKeys() {
 createKeys();
 
 let textWindow = document.querySelector(".text-window");
-const keys = document.querySelectorAll(".key");
+const keysRu = document.querySelectorAll(".ru");
+const keysEn = document.querySelectorAll(".en");
 
 function pressKey() {
-    checkPressedKeys(changeLanguage, "AltLeft", "ShiftLeft");
     document.body.addEventListener("keydown", function(event) {
-        event.preventDefault(); //write functionality for special keys
-        for(let i = 0; i < keys.length; i++) {
-            if(keys[i].textContent === event.key) {
-                keys[i].classList.add("press");
-                if(keys[i].textContent === "Enter" || keys[i].textContent === "CapsLock" || 
-                   keys[i].textContent === "Backspace" || keys[i].textContent === "Tab") textWindow += "";
-                else textWindow.textContent += event.key;
-            }
-            if(keys[i].textContent === "Lshift" && event.code === "ShiftLeft" || 
-               keys[i].textContent === "Rshift" && event.code === "ShiftRight" || 
-               keys[i].textContent === "Lalt" && event.code === "AltLeft" || 
-               keys[i].textContent === "Ralt" && event.code === "AltRight" || 
-               keys[i].textContent === "Lctrl" && event.code === "ControlLeft" || 
-               keys[i].textContent === "Rctrl" && event.code === "ControlRight" || 
-               keys[i].textContent === "Del" && event.code === "Delete" || 
-               keys[i].textContent === "Win" && event.code === "MetaLeft") keys[i].classList.add("press");
-            if(keys[i].textContent === "▲" && event.code === "ArrowUp" || 
-               keys[i].textContent === "◄" && event.code === "ArrowLeft" || 
-               keys[i].textContent === "▼" && event.code === "ArrowDown" || 
-               keys[i].textContent === "►" && event.code === "ArrowRight") {
-                  keys[i].classList.add("press");
-                  textWindow.textContent += keys[i].textContent;
-               }
-        } 
+        event.preventDefault();
+        if(language === "en") {
+            let keys = keysEn;
+            actionsForKeys(keys, event);
+        }
+        if(language === "ru"){
+            let keys = keysRu;
+            actionsForKeys(keys, event);
+        }
     })
 
     document.body.addEventListener("keyup", function(event) {
         for(let j = 0; j < keys.length; j++) {
-            if(keys[j].textContent === event.key) keys[j].classList.remove("press");
+            if(keys[j].textContent === event.key && keys[j].textContent !== "CapsLock") keys[j].classList.remove("press");
             if(keys[j].textContent === "Lshift" && event.code === "ShiftLeft" || 
                keys[j].textContent === "Rshift" && event.code === "ShiftRight" || 
                keys[j].textContent === "Lalt" && event.code === "AltLeft" || 
@@ -143,6 +128,49 @@ function pressKey() {
 
 pressKey();
 
+function actionsForKeys(keys, event) {
+    for(let i = 0; i < keys.length; i++) {
+        if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" && 
+           keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
+           keys[i].textContent !== "Tab") {
+               keys[i].classList.add("press");
+               textWindow.textContent += event.key;
+        }
+        if(keys[i].textContent === event.key && keys[i].textContent === "CapsLock") {
+            keys[i].classList.toggle("press");
+        }
+        if(keys[i].textContent === event.key && keys[i].textContent === "Enter") {
+            keys[i].classList.add("press");
+            textWindow.textContent += "\n";
+        }
+        if(keys[i].textContent === event.key && keys[i].textContent === "Tab") {
+            keys[i].classList.add("press");
+            textWindow.textContent += "    ";
+        }
+        if(keys[i].textContent === event.key && keys[i].textContent === "Backspace") {
+            keys[i].classList.add("press");
+            textWindow.textContent = textWindow.textContent.slice(0, -1);
+        }
+        if(keys[i].textContent === "Lshift" && event.code === "ShiftLeft" || 
+           keys[i].textContent === "Rshift" && event.code === "ShiftRight" || 
+           keys[i].textContent === "Lalt" && event.code === "AltLeft" || 
+           keys[i].textContent === "Ralt" && event.code === "AltRight" || 
+           keys[i].textContent === "Lctrl" && event.code === "ControlLeft" || 
+           keys[i].textContent === "Rctrl" && event.code === "ControlRight" || 
+           keys[i].textContent === "Del" && event.code === "Delete" || 
+           keys[i].textContent === "Win" && event.code === "MetaLeft") keys[i].classList.add("press");
+        if(keys[i].textContent === "▲" && event.code === "ArrowUp" || 
+           keys[i].textContent === "◄" && event.code === "ArrowLeft" || 
+           keys[i].textContent === "▼" && event.code === "ArrowDown" || 
+           keys[i].textContent === "►" && event.code === "ArrowRight") {
+               keys[i].classList.add("press");
+               textWindow.textContent += keys[i].textContent;
+        }
+    }
+}
+
+const keys = document.querySelectorAll(".key");
+
 function clickOnKey() {
     for(let i = 0; i < keys.length; i++) {
         keys[i].addEventListener("mousedown", function() {
@@ -154,8 +182,8 @@ function clickOnKey() {
             else if(keys[i].textContent === "CapsLock" || keys[i].textContent === "Win" || 
                     keys[i].textContent === "Lshift" || keys[i].textContent === "Rshift" || 
                     keys[i].textContent === "Lalt" || keys[i].textContent === "Ralt" || 
-                    keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl" ||
-                    keys[i].textContent === "Del") textWindow += "";
+                    keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl" || 
+                    keys[i].textContent === "Del");
             else textWindow.textContent += keys[i].textContent;
         })
     }
@@ -208,3 +236,5 @@ function checkPressedKeys(func, ...codes) {
         pressed.delete(event.code);
       });
 } // change language 
+
+checkPressedKeys(changeLanguage, "AltLeft", "ShiftLeft");
