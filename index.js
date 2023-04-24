@@ -191,6 +191,7 @@ function actionsForKeys(keys, shift, caps, event) {
             caps.forEach((el) => {
                 el.classList.toggle("hidden");
             })
+            caps[i].classList.toggle("press");
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "Enter") {
             keys[i].classList.add("press");
@@ -213,6 +214,7 @@ function actionsForKeys(keys, shift, caps, event) {
                shift.forEach((el) => {
                    el.classList.remove("hidden");
                })
+               shift[i].classList.add("press");
            } 
         if(keys[i].textContent === "Lalt" && event.code === "AltLeft" || 
            keys[i].textContent === "Ralt" && event.code === "AltRight" || 
@@ -260,31 +262,41 @@ function clickOnKey() {
                     keys[i].textContent === "Lalt" || keys[i].textContent === "Ralt" || 
                     keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl" || 
                     keys[i].textContent === "Del");
-            else if(keys[i].textContent === "Lshift" || keys[i].textContent === "Rshift") {
-                if(language === "en") {
+            else if((keys[i].textContent === "Lshift" || keys[i].textContent === "Rshift") && language === "en") {
                     keysEnShift.forEach((el) => {
                         el.classList.remove("hidden");
                     })
                     keysEn.forEach((el) => {
                         el.classList.add("hidden");
                     })
-                }
-                if(language === "ru") {
+                    keysEnShift[i].classList.add("press");
+            }
+            else if(keys[i].textContent === "Lshift" && language === "ru") {
                     keysRuShift.forEach((el) => {
                         el.classList.remove("hidden");
+                        if(el.textContent === "Lshift") el.classList.add("press");
                     })
                     keysRu.forEach((el) => {
                         el.classList.add("hidden");
                     })
-                }
             }
+            else if(keys[i].textContent === "Rshift" && language === "ru") {
+                keysRuShift.forEach((el) => {
+                    el.classList.remove("hidden");
+                    if(el.textContent === "Rshift") el.classList.add("press");
+                })
+                keysRu.forEach((el) => {
+                    el.classList.add("hidden");
+                })
+        }
+        
             else textWindow.textContent += keys[i].textContent;
         })
     }
 
     for(let j = 0; j < keys.length; j++) {
         keys[j].addEventListener("mouseup", function() {
-            if(keys[j].textContent !== "CapsLock") keys[j].classList.remove("press");
+            if(keys[j].textContent !== "CapsLock" || keys[j].textContent !== "Lshift" || keys[j].textContent !== "Rshift") keys[j].classList.remove("press");
             if(keys[j].textContent === "Lshift" || keys[j].textContent === "Rshift") {
                 if(language === "en") {
                     keysEnShift.forEach((el) => {
@@ -292,6 +304,7 @@ function clickOnKey() {
                     })
                     keysEn.forEach((el) => {
                         el.classList.remove("hidden");
+                        el.classList.remove("press");
                     })
                 }
                 if(language === "ru") {
@@ -300,8 +313,15 @@ function clickOnKey() {
                     })
                     keysRu.forEach((el) => {
                         el.classList.remove("hidden");
+                        el.classList.remove("press");
                     })
                 }
+            }
+            if(keys[j].textContent === "CapsLock" && language === "en") {
+                if(!keysEnCaps[29].classList.contains("hidden")) keysEnCaps[29].classList.toggle("press");
+            }
+            if(keys[j].textContent === "CapsLock" && language === "ru") {
+                if(!keysRuCaps[29].classList.contains("hidden")) keysRuCaps[29].classList.toggle("press");
             }
         })
     }
