@@ -48,6 +48,17 @@ const keyboardKeysRuShift = ["Ё", "!", "\"", "№", ";", "%", ":", "?", "*", "(
                         "Lshift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "▲", "Rshift", 
                         "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
 
+const keyboardKeysEnCaps = ["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
+                        "Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\", "Del", 
+                        "CapsLock", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter", 
+                        "Lshift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "▲", "Rshift", 
+                        "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
+const keyboardKeysRuCaps = ["Ё", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace", 
+                        "Tab", "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "\\", "Del", 
+                        "CapsLock", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "Enter", 
+                        "Lshift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ".", "▲", "Rshift", 
+                        "Lctrl", "Win", "Lalt", " ", "Ralt", "◄", "▼", "►", "Rctrl"];
+
 let language;
 function setLocalStorage() {
     localStorage.setItem("language", language);
@@ -67,6 +78,8 @@ function createKeys() {
     createLayout(keyboardKeysRu, "ru");
     createLayout(keyboardKeysEnShift, "enShift");
     createLayout(keyboardKeysRuShift, "ruShift");
+    createLayout(keyboardKeysEnCaps, "enCaps");
+    createLayout(keyboardKeysRuCaps, "ruCaps");
 
     if(language === "en") document.querySelectorAll(".ru").forEach((el) => {
         el.classList.add("hidden");
@@ -81,7 +94,14 @@ function createKeys() {
     document.querySelectorAll(".ruShift").forEach((el) => {
         el.classList.add("hidden");
     })
-}  // creating buttons in keyboard-container (2 languages)
+
+    document.querySelectorAll(".enCaps").forEach((el) => {
+        el.classList.add("hidden");
+    })
+    document.querySelectorAll(".ruCaps").forEach((el) => {
+        el.classList.add("hidden");
+    })
+}  // creating layouts in keyboard-container (2 languages)
 
 function createLayout(data, type) {
     data.forEach((element) => {
@@ -107,15 +127,17 @@ const keysRu = document.querySelectorAll(".ru");
 const keysEn = document.querySelectorAll(".en");
 const keysRuShift = document.querySelectorAll(".ruShift");
 const keysEnShift = document.querySelectorAll(".enShift");
+const keysRuCaps = document.querySelectorAll(".ruCaps");
+const keysEnCaps = document.querySelectorAll(".enCaps");
 
 function pressKey() {
     document.body.addEventListener("keydown", function(event) {
         event.preventDefault();
         if(language === "en") {
-            actionsForKeys(keysEn, keysEnShift, event);
+            actionsForKeys(keysEn, keysEnShift, keysEnCaps,  event);
         }
         if(language === "ru"){
-            actionsForKeys(keysRu, keysRuShift, event);
+            actionsForKeys(keysRu, keysRuShift, keysRuCaps, event);
         }
     })
 
@@ -147,7 +169,7 @@ function pressKey() {
 
 pressKey();
 
-function actionsForKeys(keys, data, event) {
+function actionsForKeys(keys, shift, caps, event) {
     for(let i = 0; i < keys.length; i++) {
         if(keys[i].textContent === event.key.toLowerCase() && keys[i].textContent !== "Enter" && 
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
@@ -163,6 +185,12 @@ function actionsForKeys(keys, data, event) {
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "CapsLock") {
             keys[i].classList.toggle("press");
+            keys.forEach((el) => {
+                el.classList.toggle("hidden");
+            })
+            caps.forEach((el) => {
+                el.classList.toggle("hidden");
+            })
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "Enter") {
             keys[i].classList.add("press");
@@ -182,7 +210,7 @@ function actionsForKeys(keys, data, event) {
                keys.forEach((el) => {
                    el.classList.add("hidden");
                })
-               data.forEach((el) => {
+               shift.forEach((el) => {
                    el.classList.remove("hidden");
                })
            } 
@@ -205,7 +233,25 @@ function actionsForKeys(keys, data, event) {
 function clickOnKey() {
     for(let i = 0; i < keys.length; i++) {
         keys[i].addEventListener("mousedown", function() {
-            if(keys[i].textContent === "CapsLock") keys[i].classList.toggle("press");
+            if(keys[i].textContent === "CapsLock") {
+                keys[i].classList.toggle("press");
+                if(language === "en"){
+                    keysEn.forEach((el) => {
+                        el.classList.toggle("hidden");
+                    })
+                    keysEnCaps.forEach((el) => {
+                        el.classList.toggle("hidden");
+                    })
+                }
+                if(language === "ru"){
+                    keysRu.forEach((el) => {
+                        el.classList.toggle("hidden");
+                    })
+                    keysRuCaps.forEach((el) => {
+                        el.classList.toggle("hidden");
+                    })
+                }
+            }
             else keys[i].classList.add("press");
             if(keys[i].textContent === "Enter") textWindow.textContent += "\n";
             else if(keys[i].textContent === "Backspace") textWindow.textContent = textWindow.textContent.slice(0, -1);
