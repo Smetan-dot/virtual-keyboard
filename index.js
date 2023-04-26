@@ -175,31 +175,27 @@ function actionsForKeys(keys, shift, caps, event) {
     for(let i = 0; i < keys.length; i++) {
         if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && 
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " &&
            (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
-               console.log(event, keys[i], shift[i]);
                shift[i].classList.add("press");
                textWindow.textContent += shift[i].textContent;
         }
         if(shift[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && 
+           keys[i].textContent !== "Tab" && 
            (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
-               console.log(event, keys[i], shift[i]);
                shift[i].classList.add("press");
                textWindow.textContent += shift[i].textContent;
         }
         if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
            keys[i].textContent !== "Tab" && keys[i].textContent !== " " && caps[29].classList.contains("press")) {
-               console.log(event, keys[i], caps[i]);
                caps[i].classList.add("press");
                textWindow.textContent += caps[i].textContent;
         }
         if(caps[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && caps[29].classList.contains("press")) {
-               console.log(event, keys[i], caps[i]);
+           keys[i].textContent !== "Tab" && caps[29].classList.contains("press")) {
                caps[i].classList.add("press");
                textWindow.textContent += caps[i].textContent;
         }
