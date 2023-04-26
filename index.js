@@ -143,9 +143,11 @@ function pressKey() {
 
     document.body.addEventListener("keyup", function(event) {
         for(let j = 0; j < keys.length; j++) {
-            if(keys[j].textContent !== "CapsLock") keys[j].classList.remove("press");
+            if(keys[j].textContent !== "CapsLock" && keys[j].textContent !== "Lshift" && 
+               keys[j].textContent !== "Rshift") keys[j].classList.remove("press");
             if(keys[j].textContent === "Lshift" && event.code === "ShiftLeft" || 
                keys[j].textContent === "Rshift" && event.code === "ShiftRight") {
+                   keys[j].classList.remove("press");
                    if(language === "en") {
                        keysEnShift.forEach((el) => {
                            el.classList.add("hidden");
@@ -171,18 +173,44 @@ pressKey();
 
 function actionsForKeys(keys, shift, caps, event) {
     for(let i = 0; i < keys.length; i++) {
-        if(keys[i].textContent === event.key.toLowerCase() && keys[i].textContent !== "Enter" && 
+        if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && event.shiftKey) {
-               keys[i].classList.add("press");
-               textWindow.textContent += event.key;
-           }
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && 
+           (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
+               console.log(event, keys[i], shift[i]);
+               shift[i].classList.add("press");
+               textWindow.textContent += shift[i].textContent;
+        }
+        if(shift[i].textContent === event.key && keys[i].textContent !== "Enter" &&
+           keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && 
+           (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
+               console.log(event, keys[i], shift[i]);
+               shift[i].classList.add("press");
+               textWindow.textContent += shift[i].textContent;
+        }
+        if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" &&
+           keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && caps[29].classList.contains("press")) {
+               console.log(event, keys[i], caps[i]);
+               caps[i].classList.add("press");
+               textWindow.textContent += caps[i].textContent;
+        }
+        if(caps[i].textContent === event.key && keys[i].textContent !== "Enter" &&
+           keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && caps[29].classList.contains("press")) {
+               console.log(event, keys[i], caps[i]);
+               caps[i].classList.add("press");
+               textWindow.textContent += caps[i].textContent;
+        }
         if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" && 
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab") {
+           keys[i].textContent !== "Tab" && !(shift[42].classList.contains("press") || shift[54].classList.contains("press")) 
+           && !caps[29].classList.contains("press")) {
                keys[i].classList.add("press");
-               textWindow.textContent += event.key;
+               textWindow.textContent += keys[i].textContent;
         }
+        
         if(keys[i].textContent === event.key && keys[i].textContent === "CapsLock") {
             keys[i].classList.toggle("press");
             keys.forEach((el) => {
