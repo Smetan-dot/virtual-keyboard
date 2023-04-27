@@ -6,6 +6,7 @@ function init() {
 
     const textArea = document.createElement("textarea");
     textArea.className = "text-window";
+    textArea.setAttribute("autofocus", "true");
     document.body.appendChild(textArea);
 
     const keyboard = document.createElement("div");
@@ -117,7 +118,7 @@ function createLayout(data, type) {
         if(element === " ") keyElement.classList.add("super-wide");
         keyboardContainer.appendChild(keyElement);
     })
-}
+} // create 1 case of layout
 
 createKeys();
 
@@ -178,33 +179,40 @@ function actionsForKeys(keys, shift, caps, event) {
            keys[i].textContent !== "Tab" && keys[i].textContent !== " " &&
            (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
                shift[i].classList.add("press");
-               textWindow.textContent += shift[i].textContent;
+               textWindow.setRangeText(shift[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(shift[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
            keys[i].textContent !== "Tab" && 
            (shift[42].classList.contains("press") || shift[54].classList.contains("press"))) {
                shift[i].classList.add("press");
-               textWindow.textContent += shift[i].textContent;
+               textWindow.setRangeText(shift[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
-           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && caps[29].classList.contains("press")) {
+           keys[i].textContent !== "Tab" && keys[i].textContent !== " " && keys[i].textContent !== "`" && 
+           keys[i].textContent !== "1" && keys[i].textContent !== "2" && keys[i].textContent !== "3" && 
+           keys[i].textContent !== "4" && keys[i].textContent !== "5" && keys[i].textContent !== "6" && 
+           keys[i].textContent !== "7" && keys[i].textContent !== "8" && keys[i].textContent !== "9" && 
+           keys[i].textContent !== "0" && keys[i].textContent !== "-" && keys[i].textContent !== "=" && 
+           keys[i].textContent !== "[" && keys[i].textContent !== "]" && keys[i].textContent !== "\\" &&
+           keys[i].textContent !== ";" && keys[i].textContent !== "'" && keys[i].textContent !== "," && 
+           keys[i].textContent !== "." && keys[i].textContent !== "/" && caps[29].classList.contains("press")) {
                caps[i].classList.add("press");
-               textWindow.textContent += caps[i].textContent;
+               textWindow.setRangeText(caps[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(caps[i].textContent === event.key && keys[i].textContent !== "Enter" &&
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
            keys[i].textContent !== "Tab" && caps[29].classList.contains("press")) {
                caps[i].classList.add("press");
-               textWindow.textContent += caps[i].textContent;
+               textWindow.setRangeText(caps[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(keys[i].textContent === event.key && keys[i].textContent !== "Enter" && 
            keys[i].textContent !== "CapsLock" && keys[i].textContent !== "Backspace" && 
            keys[i].textContent !== "Tab" && !(shift[42].classList.contains("press") || shift[54].classList.contains("press")) 
            && !caps[29].classList.contains("press")) {
                keys[i].classList.add("press");
-               textWindow.textContent += keys[i].textContent;
+               textWindow.setRangeText(keys[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         
         if(keys[i].textContent === event.key && keys[i].textContent === "CapsLock") {
@@ -219,15 +227,19 @@ function actionsForKeys(keys, shift, caps, event) {
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "Enter") {
             keys[i].classList.add("press");
-            textWindow.textContent += "\n";
+            textWindow.setRangeText("\n", getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "Tab") {
             keys[i].classList.add("press");
-            textWindow.textContent += "    ";
+            textWindow.setRangeText("    ", getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
         if(keys[i].textContent === event.key && keys[i].textContent === "Backspace") {
             keys[i].classList.add("press");
-            textWindow.textContent = textWindow.textContent.slice(0, -1);
+            textWindow.setRangeText("", (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), "end");
+        }
+        if(keys[i].textContent === "Del" && event.code === "Delete") {
+            keys[i].classList.add("press");
+            textWindow.setRangeText("", getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), "end");
         }
         if(keys[i].textContent === "Lshift" && event.code === "ShiftLeft" || 
            keys[i].textContent === "Rshift" && event.code === "ShiftRight"){
@@ -243,18 +255,17 @@ function actionsForKeys(keys, shift, caps, event) {
         if(keys[i].textContent === "Lalt" && event.code === "AltLeft" || 
            keys[i].textContent === "Ralt" && event.code === "AltRight" || 
            keys[i].textContent === "Lctrl" && event.code === "ControlLeft" || 
-           keys[i].textContent === "Rctrl" && event.code === "ControlRight" || 
-           keys[i].textContent === "Del" && event.code === "Delete" || 
+           keys[i].textContent === "Rctrl" && event.code === "ControlRight" ||  
            keys[i].textContent === "Win" && event.code === "MetaLeft") keys[i].classList.add("press");
         if(keys[i].textContent === "▲" && event.code === "ArrowUp" || 
            keys[i].textContent === "◄" && event.code === "ArrowLeft" || 
            keys[i].textContent === "▼" && event.code === "ArrowDown" || 
            keys[i].textContent === "►" && event.code === "ArrowRight") {
                keys[i].classList.add("press");
-               textWindow.textContent += keys[i].textContent;
+               textWindow.setRangeText(keys[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         }
     }
-} // TODO: win and del functionality
+}  // physical keybord-keys functionality
 
 function clickOnKey() {
     for(let i = 0; i < keys.length; i++) {
@@ -279,13 +290,13 @@ function clickOnKey() {
                 }
             }
             else keys[i].classList.add("press");
-            if(keys[i].textContent === "Enter") textWindow.textContent += "\n";
-            else if(keys[i].textContent === "Backspace") textWindow.textContent = textWindow.textContent.slice(0, -1);
-            else if(keys[i].textContent === "Tab") textWindow.textContent += "    ";
+            if(keys[i].textContent === "Enter") textWindow.setRangeText("\n", getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
+            else if(keys[i].textContent === "Backspace") textWindow.setRangeText("", (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), "end");
+            else if(keys[i].textContent === "Del") textWindow.setRangeText("", getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), "end");
+            else if(keys[i].textContent === "Tab") textWindow.setRangeText("    ", getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
             else if(keys[i].textContent === "CapsLock" || keys[i].textContent === "Win" || 
                     keys[i].textContent === "Lalt" || keys[i].textContent === "Ralt" || 
-                    keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl" || 
-                    keys[i].textContent === "Del");
+                    keys[i].textContent === "Lctrl" || keys[i].textContent === "Rctrl");
             else if((keys[i].textContent === "Lshift" || keys[i].textContent === "Rshift") && language === "en") {
                     keysEnShift.forEach((el) => {
                         el.classList.remove("hidden");
@@ -312,15 +323,16 @@ function clickOnKey() {
                 keysRu.forEach((el) => {
                     el.classList.add("hidden");
                 })
-        }
+            }
         
-            else textWindow.textContent += keys[i].textContent;
+            else textWindow.setRangeText(keys[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), "end");
         })
     }
 
     for(let j = 0; j < keys.length; j++) {
         keys[j].addEventListener("mouseup", function() {
-            if(keys[j].textContent !== "CapsLock" || keys[j].textContent !== "Lshift" || keys[j].textContent !== "Rshift") keys[j].classList.remove("press");
+            if(keys[j].textContent !== "CapsLock" || keys[j].textContent !== "Lshift" || 
+               keys[j].textContent !== "Rshift") keys[j].classList.remove("press");
             if(keys[j].textContent === "Lshift" || keys[j].textContent === "Rshift") {
                 if(language === "en") {
                     keysEnShift.forEach((el) => {
@@ -372,7 +384,7 @@ function changeLanguage() {
             el.classList.remove("hidden");
         })
     }
-}
+} // change language function
 
 function checkPressedKeys(func, ...codes) {
     let pressed = new Set();
@@ -391,6 +403,20 @@ function checkPressedKeys(func, ...codes) {
     document.addEventListener('keyup', function(event) {
         pressed.delete(event.code);
       });
-} // change language 
+} // change language keys
 
 checkPressedKeys(changeLanguage, "AltLeft", "ControlLeft");
+
+function getCaretPosition(object) {
+    object.focus();
+    if(object.selectionStart) return object.selectionStart;
+    else if(document.selection) {
+        let sel = document.selection.createRange();
+        let clone = sel.duplicate();
+        sel.collapse(true);
+        clone.moveToElementText(object);
+        clone.setEndPoint("EndToEnd", sel);
+        return clone.text.length;
+    }
+    return 0;
+} // return position caret in textarea
