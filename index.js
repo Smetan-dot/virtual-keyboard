@@ -212,7 +212,7 @@ function actionsForKeys(low, shift, caps, event) {
     }
     if (low[i].textContent === event.key && low[i].textContent === 'Backspace') {
       low[i].classList.add('press');
-      textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
+      if(textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
     }
     if (low[i].textContent === 'Del' && event.code === 'Delete') {
       low[i].classList.add('press');
@@ -305,7 +305,9 @@ function clickOnKey(lang) {
         }
       } else keys[i].classList.add('press');
       if (keys[i].textContent === 'Enter') textWindow.setRangeText('\n', getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
-      else if (keys[i].textContent === 'Backspace') textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
+      else if (keys[i].textContent === 'Backspace') {
+        if(textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
+      }
       else if (keys[i].textContent === 'Del') textWindow.setRangeText('', getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), 'end');
       else if (keys[i].textContent === 'Tab') textWindow.setRangeText('    ', getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
       else if (keys[i].textContent === 'CapsLock' || keys[i].textContent === 'Win'
