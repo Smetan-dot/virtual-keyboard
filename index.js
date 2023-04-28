@@ -192,7 +192,7 @@ function actionsForKeys(low, shift, caps, event) {
       textWindow.setRangeText(low[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
     }
 
-    if (low[i].textContent === event.key && low[i].textContent === 'CapsLock') {
+    if (low[i].textContent === event.key && low[i].textContent === 'CapsLock' && !(shift[42].classList.contains('press') || shift[54].classList.contains('press'))) {
       low[i].classList.toggle('press');
       low.forEach((el) => {
         el.classList.toggle('hidden');
@@ -202,6 +202,7 @@ function actionsForKeys(low, shift, caps, event) {
       });
       caps[i].classList.toggle('press');
     }
+    if (low[i].textContent === event.key && low[i].textContent === 'CapsLock' && (shift[42].classList.contains('press') || shift[54].classList.contains('press'))) shift[i].classList.add('press');
     if (low[i].textContent === event.key && low[i].textContent === 'Enter') {
       low[i].classList.add('press');
       textWindow.setRangeText('\n', getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
@@ -212,13 +213,13 @@ function actionsForKeys(low, shift, caps, event) {
     }
     if (low[i].textContent === event.key && low[i].textContent === 'Backspace') {
       low[i].classList.add('press');
-      if(textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
+      if (textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
     }
     if (low[i].textContent === 'Del' && event.code === 'Delete') {
       low[i].classList.add('press');
       textWindow.setRangeText('', getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), 'end');
     }
-    if ((low[i].textContent === 'Lshift' && event.code === 'ShiftLeft') || (low[i].textContent === 'Rshift' && event.code === 'ShiftRight')) {
+    if (((low[i].textContent === 'Lshift' && event.code === 'ShiftLeft') || (low[i].textContent === 'Rshift' && event.code === 'ShiftRight')) && !caps[29].classList.contains('press')) {
       low[i].classList.add('press');
       low.forEach((el) => {
         el.classList.add('hidden');
@@ -228,6 +229,7 @@ function actionsForKeys(low, shift, caps, event) {
       });
       shift[i].classList.add('press');
     }
+    if (((caps[i].textContent === 'Lshift' && event.code === 'ShiftLeft') || (caps[i].textContent === 'Rshift' && event.code === 'ShiftRight')) && caps[29].classList.contains('press')) caps[i].classList.add('press');
     if ((low[i].textContent === 'Lalt' && event.code === 'AltLeft')
            || (low[i].textContent === 'Ralt' && event.code === 'AltRight')
            || (low[i].textContent === 'Lctrl' && event.code === 'ControlLeft')
@@ -256,10 +258,11 @@ function pressKey() {
 
   document.body.addEventListener('keyup', (event) => {
     for (let j = 0; j < keys.length; j += 1) {
+      if (keys[j].textContent === event.key && keys[j].textContent === 'CapsLock' && (keysEnShift[42].classList.contains('press') || keysEnShift[54].classList.contains('press') || keysRuShift[42].classList.contains('press') || keysRuShift[54].classList.contains('press'))) keys[j].classList.remove('press');
       if (keys[j].textContent !== 'CapsLock' && keys[j].textContent !== 'Lshift' && keys[j].textContent !== 'Rshift') keys[j].classList.remove('press');
       if ((keys[j].textContent === 'Lshift' && event.code === 'ShiftLeft') || (keys[j].textContent === 'Rshift' && event.code === 'ShiftRight')) {
         keys[j].classList.remove('press');
-        if (language === 'en') {
+        if (language === 'en' && !keysEnCaps[29].classList.contains('press')) {
           keysEnShift.forEach((el) => {
             el.classList.add('hidden');
           });
@@ -267,7 +270,7 @@ function pressKey() {
             el.classList.remove('hidden');
           });
         }
-        if (language === 'ru') {
+        if (language === 'ru' && !keysRuCaps[29].classList.contains('press')) {
           keysRuShift.forEach((el) => {
             el.classList.add('hidden');
           });
@@ -282,12 +285,17 @@ function pressKey() {
 
 pressKey();
 
-function clickOnKey(lang) {
+function checkLanguage() {
+  return language;
+}
+
+function clickOnKey() {
   for (let i = 0; i < keys.length; i += 1) {
     keys[i].addEventListener('mousedown', () => {
+      const lang = checkLanguage();
       if (keys[i].textContent === 'CapsLock') {
         keys[i].classList.toggle('press');
-        if (lang === 'en') {
+        if (lang === 'en' && !(keysEnShift[42].classList.contains('press') || keysEnShift[54].classList.contains('press'))) {
           keysEn.forEach((el) => {
             el.classList.toggle('hidden');
           });
@@ -295,7 +303,7 @@ function clickOnKey(lang) {
             el.classList.toggle('hidden');
           });
         }
-        if (lang === 'ru') {
+        if (lang === 'ru' && !(keysRuShift[42].classList.contains('press') || keysRuShift[54].classList.contains('press'))) {
           keysRu.forEach((el) => {
             el.classList.toggle('hidden');
           });
@@ -306,14 +314,13 @@ function clickOnKey(lang) {
       } else keys[i].classList.add('press');
       if (keys[i].textContent === 'Enter') textWindow.setRangeText('\n', getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
       else if (keys[i].textContent === 'Backspace') {
-        if(textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
-      }
-      else if (keys[i].textContent === 'Del') textWindow.setRangeText('', getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), 'end');
+        if (textWindow.value.length > 0) textWindow.setRangeText('', (getCaretPosition(textWindow) - 1), getCaretPosition(textWindow), 'end');
+      } else if (keys[i].textContent === 'Del') textWindow.setRangeText('', getCaretPosition(textWindow), (getCaretPosition(textWindow) + 1), 'end');
       else if (keys[i].textContent === 'Tab') textWindow.setRangeText('    ', getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
       else if (keys[i].textContent === 'CapsLock' || keys[i].textContent === 'Win'
                     || keys[i].textContent === 'Lalt' || keys[i].textContent === 'Ralt'
                     || keys[i].textContent === 'Lctrl' || keys[i].textContent === 'Rctrl');
-      else if ((keys[i].textContent === 'Lshift' || keys[i].textContent === 'Rshift') && lang === 'en') {
+      else if ((keys[i].textContent === 'Lshift' || keys[i].textContent === 'Rshift') && lang === 'en' && !keysEnCaps[29].classList.contains('press')) {
         keysEnShift.forEach((el) => {
           el.classList.remove('hidden');
         });
@@ -321,7 +328,8 @@ function clickOnKey(lang) {
           el.classList.add('hidden');
         });
         keysEnShift[i].classList.add('press');
-      } else if (keys[i].textContent === 'Lshift' && lang === 'ru') {
+      } else if ((keys[i].textContent === 'Lshift' || keys[i].textContent === 'Rshift') && lang === 'en' && keysEnCaps[29].classList.contains('press'));
+      else if (keys[i].textContent === 'Lshift' && lang === 'ru' && !keysRuCaps[29].classList.contains('press')) {
         keysRuShift.forEach((el) => {
           el.classList.remove('hidden');
           if (el.textContent === 'Lshift') el.classList.add('press');
@@ -329,7 +337,7 @@ function clickOnKey(lang) {
         keysRu.forEach((el) => {
           el.classList.add('hidden');
         });
-      } else if (keys[i].textContent === 'Rshift' && lang === 'ru') {
+      } else if (keys[i].textContent === 'Rshift' && lang === 'ru' && !keysRuCaps[29].classList.contains('press')) {
         keysRuShift.forEach((el) => {
           el.classList.remove('hidden');
           if (el.textContent === 'Rshift') el.classList.add('press');
@@ -337,16 +345,18 @@ function clickOnKey(lang) {
         keysRu.forEach((el) => {
           el.classList.add('hidden');
         });
-      } else textWindow.setRangeText(keys[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
+      } else if ((keys[i].textContent === 'Rshift' || keys[i].textContent === 'Lshift') && lang === 'ru' && keysRuCaps[29].classList.contains('press'));
+      else textWindow.setRangeText(keys[i].textContent, getCaretPosition(textWindow), getCaretPosition(textWindow), 'end');
     });
   }
 
   for (let j = 0; j < keys.length; j += 1) {
     keys[j].addEventListener('mouseup', () => {
+      const lang = checkLanguage();
       if (keys[j].textContent !== 'CapsLock' || keys[j].textContent !== 'Lshift'
                || keys[j].textContent !== 'Rshift') keys[j].classList.remove('press');
       if (keys[j].textContent === 'Lshift' || keys[j].textContent === 'Rshift') {
-        if (lang === 'en') {
+        if (lang === 'en' && !keysEnCaps[29].classList.contains('press')) {
           keysEnShift.forEach((el) => {
             el.classList.add('hidden');
           });
@@ -355,7 +365,7 @@ function clickOnKey(lang) {
             el.classList.remove('press');
           });
         }
-        if (lang === 'ru') {
+        if (lang === 'ru' && !keysRuCaps[29].classList.contains('press')) {
           keysRuShift.forEach((el) => {
             el.classList.add('hidden');
           });
@@ -375,7 +385,7 @@ function clickOnKey(lang) {
   }
 } // mouse-click at virtual keyboard
 
-clickOnKey(language);
+clickOnKey();
 
 function changeLanguage() {
   if (language === 'en') {
