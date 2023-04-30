@@ -1,0 +1,79 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    color: darkslategray;
+    text-align: center;
+}
+
+.text-window {
+    width: 721px;
+    height: 150px;
+    margin: 15px auto 15px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.keyboard-container {
+    width: 721px;
+    margin: 0 auto;
+    padding: 5px;
+    background: rgb(218, 205, 205);
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.description {
+    font-size: 20px;
+    color: darkslategray;
+    margin: 10px auto;
+    text-align: center;
+}
+
+.key {
+    width: 40px;
+    height: 40px;
+    float: left;
+    margin: 4px;
+    line-height: 40px;
+    text-align: center;
+    color: white;
+    background: rgb(116, 102, 102);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    user-select: none;
+}
+
+.key:hover {
+    background: rgb(65, 120, 122);
+}
+
+.wide {
+    width: 88px;
+    background: darkslategray;
+}
+
+.dark {
+    background: darkslategray;
+}
+
+.super-wide {
+    width: 329px;
+}
+
+.press {
+    background: cadetblue;
+    border-radius: 40px;
+}
+
+.hidden {
+    display: none;
+}
